@@ -1,0 +1,24 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="{% url 'home' %}">Главная</a></li>
+      <li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="{% url 'contact' %}">Контакты</a></li>
+      {% if request.user.is_authenticated %}
+      <li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="{% url 'add_news' %}">Добавить новость</a></li>
+      {% endif %}
+    </ul>
+
+    <span class="navbar-text">
+        {% if request.user.is_authenticated %}
+        Добро пожаловать, {{ user.username }} | <a href="{% url 'logout' %}">Выход</a>
+        {% else %}
+        <a href="{% url 'register' %}">Register</a> | <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </span>
+  </nav>
+  <!-- /.navbar -->
