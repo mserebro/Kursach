@@ -7,7 +7,7 @@ def index(request):
     if request.GET:
         print(request.GET)
     
-    return render(request, '')
+    return render(request, 'liblinks/index.html')
     
     return HttpResponse("<h1>Страница библиографических ссылок</h1>")
     
