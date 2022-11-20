@@ -5,4 +5,4 @@ from django.http import HttpResponse
 
 def index(request)
     #print(request)
-    return HttpResponse('Hello world')
+    return HttpResponse("<h1>Страница библиографических ссылок</h1>")
