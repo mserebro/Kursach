@@ -28,6 +28,8 @@ urlpatterns = [
     path('liblinks/', include('liblinks.urls')),
 ]
 
+handler404 = pageNotFound
+
 if settings.DEBUG:
     import debug_toolbar
 
