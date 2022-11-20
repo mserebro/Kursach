@@ -1,17 +1,7 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-<head>
-<body>
+{% extends 'liblinks/base.html' %}
 
-<ul>
-{% for f in field %}
-<li>{{f}}</li>
-{% endfor %}
-</ul>
-
-</body>
-</html>
+{% block content %}
+<h1>{{ title }}</h1>
+<p>Статья из сборника
+{% endblock %}
