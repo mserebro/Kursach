@@ -1,0 +1,286 @@
+
+// Обработка ФИО. Возвращает несколько вариантов
+function fullname_convert(fullname, type = "last_in") {
+  fullname = fullname.trim();
+  let lastname = "";
+  let initials = "";
+
+  // Массив из элементов ФИО
+  let names = fullname.split(/\s+|\.|\.\s+/);
+  names = names.filter(el => el.length > 0);
+
+  // Обычный вариант - Иванов Иван Иванович
+  if (names.length === 3 && names[0].length > 1) {
+    lastname = names[0];
+    initials = `${names[1].charAt(0)}. ${names[2].charAt(0)}.`;
+
+    // И.И. Иванов
+  } else if (
+    names.length === 3 &&
+    names[0].length === 1 &&
+    names[1].length === 1 &&
+    names[2].length > 1
+  ) {
+    lastname = names[2];
+    initials = `${names[0]}. ${names[1]}.`;
+
+    // И. Иванов
+  } else if (
+    names.length === 2 &&
+    names[0].length === 1 &&
+    names[1].length > 1
+  ) {
+    lastname = names[1];
+    initials = `${names[0]}.`;
+
+    // Иванов И.
+  } else if (names.length === 2 && names[1].length === 1) {
+    lastname = names[0];
+    initials = `${names[1]}.`;
+
+    // Фамилия Имя (например, Лю Цзея)
+  } else if (names.length === 2) {
+    lastname = names[0];
+    initials = names[1];
+
+    // Испанские всякие фамилии
+  } else if (names.length >= 3) {
+    lastname = names[0];
+    initials = names.slice(1, names.length - 1);
+  } else {
+    return fullname;
+  }
+
+  if (type === "last_in") {
+    return `${lastname}, ${initials}`;
+  } else if (type === "in_last") {
+    return `${initials} ${lastname}`;
+  } else {
+    return fullname;
+  }
+}
+
+// Получаем первого автора из строки с авторами
+function get_first_author(authors) {
+  authors_array = authors.split(/[,;]\s*/);
+
+  // Более пяти авторов
+  if (authors_array.length >= 4) {
+    return "";
+  } else if (authors_array.length > 0) {
+    let author_new = fullname_convert(authors_array[0], "last_in");
+    return author_new;
+  } else {
+    return "";
+  }
+}
+
+// Переформатируем строку с авторами (сначала инициалы)
+function format_authors(authors, num_authors = -1) {
+  let authors_array = authors.split(/[,;]\s*/);
+  // Если нужно вернуть только определенное количество авторов
+  if (num_authors != -1) {
+    authors_array = authors_array.slice(0, num_authors);
+    console.log(authors_array);
+  }
+
+  if (authors_array.length === 0) {
+    return "";
+    // 5+ авторов
+  } else if (authors_array.length >= 5) {
+    return `${fullname_convert(authors_array[0], "in_last")}, \
+${fullname_convert(authors_array[1], "in_last")}, \
+${fullname_convert(authors_array[2], "in_last")} [и др.]`;
+    // Обычный случай (до четырех авторов включительно)
+  } else {
+    let authors_array_new = [];
+    authors_array.forEach(author => {
+      let author_new = fullname_convert(author, "in_last");
+      authors_array_new.push(author_new);
+    });
+    return authors_array_new.join(", ");
+  }
+}
+
+// Убираем двойные пробелы и начальные и конечные пробелы
+function trim_bibl(bibl) {
+  bibl = bibl.trim();
+  bibl.replace(/\s+/, " ");
+  return bibl;
+}
+
+function showStuff(id) {
+  const divid = document.getElementById(id);
+  const divs = document.getElementsByClassName("bibl");
+  for (let i = 0; i < divs.length; i++) {
+    divs[i].style.display = "none";
+  }
+  divid.style.display = "block";
+}
+
+// Обработка обязательных полей
+
+function get_artj() {
+  let authors = document.getElementById("artj_authors").value;
+  let first_author = get_first_author(authors);
+  let authors_formatted = format_authors(authors);
+
+  let header1 = document.getElementById("artj_header1").value;
+  let journal = document.getElementById("artj_journal").value;
+  let year = document.getElementById("artj_year").value;
+  let issue = document.getElementById("artj_issue").value;
+  let pages = document.getElementById("artj_pages").value;
+  let bibl = trim_bibl(
+    `${first_author} ${header1} / ${authors_formatted}. — Текст : непосредственный // ${journal}. — ${year}. — № ${issue}. — С. ${pages}.`
+  );
+  document.getElementById("txt_artj").innerHTML = bibl;
+}
+
+function get_artb() {
+  let authors = document.getElementById("artb_authors").value;
+  let first_author = get_first_author(authors);
+  let authors_formatted = format_authors(authors);
+
+  let header1 = document.getElementById("artb_header1").value;
+  let book = document.getElementById("artb_book").value;
+  let city = document.getElementById("artb_city").value;
+  let org = document.getElementById("artb_org").value;
+  let year = document.getElementById("artb_year").value;
+  let pages = document.getElementById("artb_pages").value;
+  let bibl = trim_bibl(
+    `${first_author} ${header1} / ${authors_formatted}. — Текст : непосредственный // ${book}. — ${city} : ${org}, ${year}. — С. ${pages}.`
+  );
+  document.getElementById("txt_artb").innerHTML = bibl;
+}
+
+function get_book() {
+  let authors = document.getElementById("book_authors").value;
+  let first_author = "";
+  let authors_formatted = "";
+  if (authors.trim().length > 0) {
+    first_author = get_first_author(authors);
+    authors_formatted = " / " + format_authors(authors);
+  }
+
+  let book = document.getElementById("book_book").value;
+  let city = document.getElementById("book_city").value;
+  let num = document.getElementById("book_num").value;
+  if (num != "") {
+    num = ` — ${num}`;
+  }
+  if (num.slice(-1) != "." && num != "") {
+    num = num + ".";
+  }
+  let org = document.getElementById("book_org").value;
+  let year = document.getElementById("book_year").value;
+  let pages = document.getElementById("book_pages").value;
+  let bibl = trim_bibl(
+    `${first_author} ${book}${authors_formatted}.${num} — ${city} : ${org}, ${year}. — ${pages} c. — Текст : непосредственный.`
+  );
+
+  document.getElementById("txt_book").innerHTML = bibl;
+}
+
+function get_diss() {
+  let doctype = document.getElementById("diss_doctype").value;
+  let author = document.getElementById("diss_author").value;
+  let author_initials = fullname_convert(author, "last_in");
+  let header = document.getElementById("diss_header").value;
+  let type = document.getElementById("diss_type").value;
+  let area = document.getElementById("diss_area").value;
+  let spec_code = document.getElementById("diss_spec_code").value;
+  let spec_name = document.getElementById("diss_spec_name").value;
+  let org = document.getElementById("diss_org").value;
+  let city = document.getElementById("diss_city").value;
+  let year = document.getElementById("diss_year").value;
+  let pages = document.getElementById("diss_pages").value;
+
+  let bibl = trim_bibl(
+    `${author_initials} ${header} : специальность ${spec_code} «${spec_name}» : ${doctype} на соискание ученой степени ${type} ${area} / ${author} ; ${org}. — ${city}, ${year}. — ${pages} c. — Текст : непосредственный.`
+  );
+  document.getElementById("txt_diss").innerHTML = bibl;
+}
+
+function get_web() {
+  let authors = document.getElementById("web_author").value;
+  let first_author = "";
+  let authors_formatted = "";
+  if (authors.trim().length > 0) {
+    first_author = get_first_author(authors);
+    authors_formatted = " / " + format_authors(authors, 1);
+  }
+  let header1 = document.getElementById("web_header1").value;
+  let site = document.getElementById("web_site").value;
+  let url = document.getElementById("web_url").value;
+  let date = new Date();
+  let day = date.getUTCDate().toString();
+  if (day.length == 1) {
+    day = "0" + day;
+  }
+  let month = (date.getUTCMonth() + 1).toString();
+  if (month.length == 1) {
+    month = "0" + month;
+  }
+  let year = date.getUTCFullYear().toString();
+
+  let bibl = trim_bibl(
+    `${first_author} ${header1}${authors_formatted}. — Текст : электронный // ${site} : [сайт]. — URL: ${url} (дата обращения: ${day}.${month}.${year}).`
+  );
+  document.getElementById("txt_web").innerHTML = bibl;
+}
+
+const copyTextareaBtnBook = document.getElementById("btn_book");
+const copyTextareaBtnArtj = document.getElementById("btn_artj");
+const copyTextareaBtnArtb = document.getElementById("btn_artb");
+const copyTextareaBtnWeb = document.getElementById("btn_web");
+const copyTextareaBtnDiss = document.getElementById("btn_diss");
+
+copyTextareaBtnBook.addEventListener("click", function(event) {
+  const copyTextarea = document.querySelector(".txt_book");
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+  } catch (err) {}
+});
+
+copyTextareaBtnArtj.addEventListener("click", function(event) {
+  const copyTextarea = document.querySelector(".txt_artj");
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+  } catch (err) {}
+});
+
+copyTextareaBtnArtb.addEventListener("click", function(event) {
+  const copyTextarea = document.querySelector(".txt_artb");
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+  } catch (err) {}
+});
+
+copyTextareaBtnDiss.addEventListener("click", function(event) {
+  const copyTextarea = document.querySelector(".txt_diss");
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+  } catch (err) {}
+});
+
+copyTextareaBtnWeb.addEventListener("click", function(event) {
+  const copyTextarea = document.querySelector(".txt_web");
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    const successful = document.execCommand("copy");
+  } catch (err) {}
+});
