@@ -3,10 +3,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Библиографическая ссылка из сборника</title>
+    <title>{{ title }}</title>
 <head>
 <body>
 
+<ul>
+{% for f in field %}
+<li>{{f}}</li>
+{% endfor %}
+</ul>
 
 </body>
 </html>
