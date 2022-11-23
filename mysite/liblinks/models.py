@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.urls import reverse
 
 class Liblinks(models.Model):
     title = models.CharField(max_length=150, verbose_name='Наименование')
@@ -9,3 +10,7 @@ class Liblinks(models.Model):
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     views = models.IntegerField(default=0)
+
+
+    def get_absolute_url(self):
+            return reverse('post', kwargs={'post_id': self.pk})
