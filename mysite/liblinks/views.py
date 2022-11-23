@@ -13,12 +13,28 @@ def index(request):
     posts = Libinks.pbjects.all()
     #if request.GET:
         #print(request.GET)
-    
-    return render(request, 'liblinks/index.html',{'posts': posts, 'field': field, 'title': 'Оформление библиографических ссылок'})
+    context = {
+        'posts': posts,
+        'field': field,
+        'title': 'Оформление библиографических ссылок'
+    }
+
+    return render(request, 'liblinks/index.html', context=context)
     
     return HttpResponse("<h1>Страница библиографических ссылок</h1>")
-    
+
+def addliblink(request):
+    return HttpResponse("Добавление библиографической ссылки")
+
+def contact(request):
+    return HttpResponse("Обратная связь")
+
+def login(request):
+    return HttpResponse("Авторизация")
+
     
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
     
+def show_post(request, post_id):
+    return HttpResponse(f"Отображение статьи с id = {post_id}")
