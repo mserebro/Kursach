@@ -8,7 +8,8 @@ urlpatterns = [
    # path('contact/', contact, name='contact'),
    # path('login/', login, name='login'),
    # path('post/<int:post_id>/', show_post, name='post'),
-   path('liblinks/', LiblinksView/as_view(), name='Liblinks'),
-   path('liblinks/<int:liblinks_id>/', LiblinksUpdate/as_view(), name='LiblinksUpdate'),
+   path('liblinks/', LiblinksView.as_view(), name='Liblinks'),
+   path('liblinks/<int:liblinks_id>/', LiblinksUpdate.as_view(), name='LiblinksUpdate'),
+   path('liblinks/create/', LiblinksView.as_view(), name='LiblinksCreate'),
 ]
 
