@@ -27,6 +27,12 @@ class LiblinksUpdate(UpdateView):
     template_name_suffix = '_update_form'
     fields = '__all__'
     success_url = '/liblinks/liblinks/'
+    
+class LiblinksCreate(CreateView):
+    model = Liblinks
+    template_name_suffix = '_create_form'
+    fields = '__all__'
+    success_url = '/liblinks/liblinks/'
 
 def index(request):
     posts = Libinks.pbjects.all()
