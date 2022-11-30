@@ -4,10 +4,29 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 from .models import *
 
-#field = ["Статья из сборника","Фамилии и инициалы авторов (через запятую)","Заголовок статьи из сборника","Название сборника","Город, в котором издан сборник","Издательство","Год издания","Страницы"]
 
 field = ["Фамилии и инициалы авторов (через запятую)","Заголовок статьи из сборника","Название сборника","Город, в котором издан сборник","Издательство","Год издания","Страницы"]
 
+
+item_for_page = 15
+
+
+class LiblinksView(ListView):
+    model = Liblinks
+    context_object_name = 'liblinks_list'
+    paginate_by = 15
+    success_url = reverse_lazy('liblinks: Liblinks')
+    
+    def get_context_data(self, *, object_list=None, **kwargs):
+    context = super(LiblinksView,self).get_context_data(**kwargs)
+    context['sometry'] = 'Оформление библиографических ссылок'
+    return context
+    
+class LiblinksUpdate(UpdateView):
+    model = Liblinks
+    template_name_suffix = '_update_form'
+    fields = '__all__'
+    success_url = '/liblinks/liblinks/'
 
 def index(request):
     posts = Libinks.pbjects.all()
@@ -19,7 +38,7 @@ def index(request):
         'title': 'Оформление библиографических ссылок'
     }
 
-    return render(request, 'liblinks/index.html', context=context)
+    #return render(request, 'liblinks/index.html', context=context)
     
     return HttpResponse("<h1>Страница библиографических ссылок</h1>")
 
