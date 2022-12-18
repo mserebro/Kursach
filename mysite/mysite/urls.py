@@ -18,7 +18,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from liblinks.views import *
+# from liblinks.views import *
+
+# from mysite.liblinks.views import pageNotFound
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,8 +29,8 @@ urlpatterns = [
     path('', include('news.urls')),
     path('liblinks/', include('liblinks.urls')),
 ]
-
-handler404 = pageNotFound
+#Убрать снизу #
+# handler404 = pageNotFound
 
 if settings.DEBUG:
     import debug_toolbar

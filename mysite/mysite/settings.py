@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'captcha',
     'news.apps.NewsConfig',
     'liblinks.apps.LiblinksConfig',
-    
 ]
 
 MIDDLEWARE = [

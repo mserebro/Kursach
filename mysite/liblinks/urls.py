@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import *
+from .views import LiblinksView, LiblinksUpdate, index
 
 urlpatterns = [
    path('', index, name='home'),
